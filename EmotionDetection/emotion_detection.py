@@ -19,7 +19,6 @@ def emotion_detector(text_to_analyze):
             dominant_emotion = ''
             dominant_score = 0
             for emotion, score in prediction.items():
-                print(emotion, score)
                 score = float(score)
                 emotion_obj[emotion] = score
                 if score >= dominant_score:
