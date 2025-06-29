@@ -10,15 +10,16 @@ def index():
 
 @app.route('/emotionDetector')
 def get_emotion_detector():
-    text_to_analyze = request.args.get('textToAnalyze')
+    text_to_analyze = request.args.get('textToAnalyze', '')
     
-    if text_to_analyze is None or text_to_analyze.strip() == '':
-        return "You must enter text to analyze", 422
-
     result = emotion_detector(text_to_analyze)
     anger, disgust, fear, sadness, dominant_emotion = itemgetter(
         'anger', 'disgust', 'fear', 'sadness', 'dominant_emotion'
     )(result)
+
+    if dominant_emotion is None:
+        return "invalit text! Please try again!"
+
     return f"For the given statement, " \
         + f"the system response is "\
         + f"'anger': {anger}, 'disgust': {disgust}. "\

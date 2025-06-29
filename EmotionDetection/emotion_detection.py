@@ -9,25 +9,32 @@ def emotion_detector(text_to_analyze):
 
     response = requests.post(url, json=data, headers=headers)
 
-    if response:
-        if response.status_code == 200:
-            text_response = response.text
-            json_response = json.loads(text_response)
-            # let's extract the first prediction only
-            prediction = json_response["emotionPredictions"][0]["emotion"]
-            emotion_obj = {}
-            dominant_emotion = ''
-            dominant_score = 0
-            for emotion, score in prediction.items():
-                score = float(score)
-                emotion_obj[emotion] = score
-                if score >= dominant_score:
-                    dominant_emotion = emotion
-                    dominant_score = score
+    emotion_obj = dict(
+        anger=None,
+        disgust=None,
+        fear=None,
+        joy=None,
+        sadness=None,
+        dominant_emotion=None,
+    )
+    if response.status_code == 200:
+        text_response = response.text
+        json_response = json.loads(text_response)
+        # let's extract the first prediction only
+        prediction = json_response["emotionPredictions"][0]["emotion"]
 
-            emotion_obj['dominant_emotion'] = dominant_emotion
-            return emotion_obj
-        else:
-            return f"received error code {response.status_code} with text {response.text}"
+        dominant_emotion = ''
+        dominant_score = 0
+        for emotion, score in prediction.items():
+            score = float(score)
+            emotion_obj[emotion] = score
+            if score >= dominant_score:
+                dominant_emotion = emotion
+                dominant_score = score
+
+        emotion_obj['dominant_emotion'] = dominant_emotion
+        return emotion_obj
+    elif response.status_code == 400:
+        return emotion_obj
     else:
-        raise Exception(f'Failed to retrieve emotion data')
+        return f"received error code {response.status_code} with text {response.text}"
