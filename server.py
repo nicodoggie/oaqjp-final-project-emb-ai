@@ -18,7 +18,11 @@ def get_emotion_detector():
     result = emotion_detector(text_to_analyze)
     anger, disgust, fear, sadness, dominant_emotion = itemgetter(
         'anger', 'disgust', 'fear', 'sadness', 'dominant_emotion'
-    )(result)emotion_detector}, 'sadness': {sadness}. " \
+    )(result)
+    return f"For the given statement, " \
+        + f"the system response is "\
+        + f"'anger': {anger}, 'disgust': {disgust}. "\
+        + f"'fear': {fear}, 'sadness': {sadness}. " \
         + f"The dominant emotion is {dominant_emotion}/"
 
 
